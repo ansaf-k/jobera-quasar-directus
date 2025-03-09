@@ -1,12 +1,14 @@
+<script setup lang="ts">
+import MainHeader from 'src/components/MainHeader.vue';
+
+</script>
+
 <template>
     <q-layout view="hHh lpR fFf">
 
         <q-header elevated class="bg-primary text-white">
             <q-toolbar>
-                <q-toolbar-title>
-                    <p class="text-h4 q-ma-sm"> <span class="text-weight-bold">J</span>ob<span
-                            class="text-weight-bold">E</span>ra</p>
-                </q-toolbar-title>
+                <MainHeader />
             </q-toolbar>
         </q-header>
 

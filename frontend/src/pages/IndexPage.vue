@@ -2,14 +2,9 @@
 import { ref, onMounted, watch } from 'vue';
 import { directus } from 'src/boot/directus';
 import { readItems } from '@directus/sdk';
+import type { Job } from 'src/boot/JobModel';
 
-interface Job {
-    id: string;
-    title: string;
-    Company: string;
-    Category: string;
-    description: string;
-}
+
 
 const jobs = ref<Job[]>([]);
 const selectedCategory = ref('');
@@ -20,7 +15,7 @@ async function fetchJobs() {
         const response = await directus.request<Job[]>(
             readItems('jobs', {
                 filter: {
-                    ...(selectedCategory.value && { Category:  selectedCategory.value.toLowerCase()  }), // Match the field name
+                    ...(selectedCategory.value && { Category: selectedCategory.value.toLowerCase() }),
                     ...(searchQuery.value && {
                         _or: [
                             { title: { _icontains: searchQuery.value } },
@@ -47,36 +42,59 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="flex justify-between">
-        <div style="min-width: 600px">
-            <q-input class="q-ma-md" outlined v-model="searchQuery" label="Search jobs" />
+    <div class="q-pa-md">
+        <!-- Search and Filter Bar -->
+        <div class="row items-center q-mb-lg q-gutter-md justify-between">
+            <div class="col-12 col-md-7 q-pr-md-md">
+                <q-input outlined v-model="searchQuery" label="Search jobs" class="full-width" dense bg-color="white"
+                    clearable>
+                    <template v-slot:prepend>
+                        <q-icon name="search" />
+                    </template>
+                </q-input>
+            </div>
+
+            <div class="col-12 col-md-4 q-mt-md-none">
+                <q-select outlined v-model="selectedCategory" :options="[
+                    { label: 'All Categories', value: '' },
+                    { label: 'Frontend', value: 'Frontend' },
+                    { label: 'Backend', value: 'Backend' },
+                    { label: 'Full Stack', value: 'Full Stack' },
+                    { label: 'UI/UX', value: 'UI/UX' }
+                ]" label="Filter by category" dense bg-color="white" class="full-width" />
+            </div>
         </div>
 
-        <div class="q-ma-md">
-            <select v-model="selectedCategory" class="q-pa-sm q-border q-rounded">
-                <option value="">All Categories</option>
-                <option value="Frontend">Frontend</option>
-                <option value="Backend">Backend</option>
-                <option value="Full Stack">Full Stack</option>
-                <option value="UI/UX">UI/UX</option>
-            </select>
+        <!-- No Jobs Found Message -->
+        <div v-if="jobs.length === 0" class="text-center q-py-xl">
+            <q-icon name="work_off" size="4rem" color="grey-5" />
+            <p class="text-h6 text-grey-8 q-mt-md">No Jobs Found</p>
         </div>
-    </div>
 
-    <div v-if="jobs.length === 0" class="text-center q-my-lg">
-        <q-spinner color="primary" size="3em" />
-        <p>Loading jobs...</p>
-    </div>
-
-    <div v-else>
-        <div class="row q-col-gutter-md">
+        <!-- Job Cards Grid -->
+        <div v-else class="row q-col-gutter-md">
             <div v-for="job in jobs" :key="job.id" class="col-12 col-md-6 col-lg-4">
-                <h2 class="dark text-xl font-semibold">{{ job.title }}</h2>
-                <p class="dark mt-2">{{ job.Company }}</p>
-                <p class="mt-2">{{ job.Category }}</p>
-                <NuxtLink :to="`/jobs/${job.id}`" class="text-blue-500 hover:underline">
-                    View Details
-                </NuxtLink>
+                <q-card flat bordered class="job-card full-height">
+                    <q-card-section>
+                        <div class="row items-center no-wrap">
+                            <div class="col">
+                                <div class="text-h6 text-weight-bold ellipsis">{{ job.title }}</div>
+                                <div class="text-subtitle1 text-primary text-weight-medium q-mt-xs">{{ job.Company }}
+                                </div>
+                            </div>
+                            <q-chip outline color="primary" text-color="primary" size="sm" class="q-ml-sm">
+                                {{ job.Category }}
+                            </q-chip>
+                        </div>
+                    </q-card-section>
+
+                    <q-separator />
+
+                    <q-card-actions>
+                        <q-btn :to="{ path: `/job/${job.id}` }" flat color="primary" label="View Details"
+                            icon="arrow_forward" />
+                    </q-card-actions>
+                </q-card>
             </div>
         </div>
     </div>

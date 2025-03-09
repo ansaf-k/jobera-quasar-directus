@@ -9,9 +9,12 @@ const routes: RouteRecordRaw[] = [
         path: '',
         component: () => import('pages/IndexPage.vue'),
       },
+      {
+        path: '/job/:id',
+        component: () => import('pages/JobDetail.vue'),
+      },
     ],
   },
-
 
   // Always leave this as last one,
   // but you can also remove it
