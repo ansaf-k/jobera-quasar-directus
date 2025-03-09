@@ -20,7 +20,7 @@ async function fetchJobs() {
         const response = await directus.request<Job[]>(
             readItems('jobs', {
                 filter: {
-                    ...(selectedCategory.value && { Category: { _eq: selectedCategory.value } }), // Match the field name
+                    ...(selectedCategory.value && { Category:  selectedCategory.value.toLowerCase()  }), // Match the field name
                     ...(searchQuery.value && {
                         _or: [
                             { title: { _icontains: searchQuery.value } },
