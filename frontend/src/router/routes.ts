@@ -15,6 +15,14 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/signup',
+    component: () => import('pages/SignUpPage.vue'),
+  },
+  {
+    path: '/login',
+    component: () => import('pages/LoginPage.vue'),
+  },
 
   // Always leave this as last one,
   // but you can also remove it

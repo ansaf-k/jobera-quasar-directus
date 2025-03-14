@@ -40,10 +40,8 @@ const formatDate = (dateString: string | null) => {
 
 <template>
   <q-page class="q-pa-md">
-    <!-- Back Button -->
     <q-btn to="/" color="primary" icon="arrow_back" label="Back to Jobs" class="q-mb-md" />
 
-    <!-- Job Details Card -->
     <div v-if="job && !loading">
       <q-card class="job-detail-card q-pa-md">
         <q-card-section>
@@ -84,7 +82,6 @@ const formatDate = (dateString: string | null) => {
       <p class="q-mt-sm">Loading job details...</p>
     </div>
 
-    <!-- No Job Found State -->
     <div v-else class="text-center q-pa-lg">
       <q-icon name="error_outline" size="3em" color="negative" />
       <p class="text-h6 q-mt-md">Job not found</p>

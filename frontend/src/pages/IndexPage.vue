@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { directus } from 'src/boot/directus';
 import { readItems } from '@directus/sdk';
 import type { Job } from 'src/boot/JobModel';
@@ -35,8 +35,10 @@ async function fetchJobs() {
 watch([selectedCategory, searchQuery], async () => {
     await fetchJobs();
 });
+console.log(window);
 onMounted(async () => {
     await fetchJobs();
+    // console.log(window);
 });
 
 </script>
@@ -65,13 +67,11 @@ onMounted(async () => {
             </div>
         </div>
 
-        <!-- No Jobs Found Message -->
         <div v-if="jobs.length === 0" class="text-center q-py-xl">
             <q-icon name="work_off" size="4rem" color="grey-5" />
             <p class="text-h6 text-grey-8 q-mt-md">No Jobs Found</p>
         </div>
 
-        <!-- Job Cards Grid -->
         <div v-else class="row q-col-gutter-md">
             <div v-for="job in jobs" :key="job.id" class="col-12 col-md-6 col-lg-4">
                 <q-card flat bordered class="job-card full-height">
